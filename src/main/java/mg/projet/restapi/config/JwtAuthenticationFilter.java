@@ -2,9 +2,11 @@ package mg.projet.restapi.config;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -28,11 +30,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         HttpServletResponse response,
         FilterChain filterChain
     ) throws ServletException, IOException {
-        System.out.println("JWT FILTER EXECUTED");
         String header = request.getHeader("Authorization");
         if(header!=null && header.startsWith("Bearer ")){
             String token = header.substring(7);
-            System.out.println("Token: " + token);
 
             if(!jwtService.isValid(token)){
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -41,11 +41,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             String email = jwtService.extractSubject(token);
+
+            List<GrantedAuthority> authorities = jwtService.extractRoles(token)
+                        .stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
+
             UsernamePasswordAuthenticationToken auth =
                 new UsernamePasswordAuthenticationToken( 
                     email,
                     null,
-                    List.of(new SimpleGrantedAuthority("ROLE_USER"))
+                    authorities
                 );
             SecurityContextHolder.getContext().setAuthentication(auth);
         }

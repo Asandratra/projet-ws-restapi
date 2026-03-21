@@ -33,6 +33,7 @@ public class JwtService {
         claims.put("telephone", userDto.getTelephone());
         claims.put("etat", userDto.getEtat());
         claims.put("dateentree",userDto.getDateentree() != null ? userDto.getDateentree().getTime() : null);
+        claims.put("mail",userDto.getMail());
 
         // Extract only role names, not the full Role object
         List<String> roleNames = userDto.getRoles().stream()
@@ -126,5 +127,26 @@ public class JwtService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public List<String> extractRoles(String token) {
+        Claims claims = extractAllClaims(token);
+        Object rolesObj = claims.get("roles");
+
+        if (rolesObj instanceof List<?> rolesList) {
+            return rolesList.stream()
+                    .map(Object::toString)
+                    .collect(Collectors.toList());
+        }
+        return List.of();
+    }
+
+    @SuppressWarnings("deprecation")
+    private Claims extractAllClaims(String token) {
+        return Jwts.parser()
+                .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }
