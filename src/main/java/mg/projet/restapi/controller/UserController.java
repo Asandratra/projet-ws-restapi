@@ -20,6 +20,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -31,7 +32,7 @@ public class UserController {
     private UserDtoAssembler userAssembler;
 
     @GetMapping()
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','VIEW_USERS')")
     public CollectionModel<EntityModel<UserDto>> getAllUsers() {
         List<EntityModel<UserDto>> users = userService.findAll()
             .stream()
@@ -42,11 +43,11 @@ public class UserController {
             linkTo(methodOn(UserController.class).getAllUsers()).withSelfRel()
         );
     }
+
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','VIEW_USERS')")
     public EntityModel<UserDto> getUserById(@PathVariable Long id) {
         return userAssembler.toModel(userService.findById(id));
     }
-    
-    
 
 }

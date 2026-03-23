@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import mg.projet.restapi.dto.UserDto;
+import mg.projet.restapi.model.Role;
 import mg.projet.restapi.model.User;
 import mg.projet.restapi.repository.UserRepository;
 
@@ -58,5 +59,11 @@ public class UserService {
     public String deleteById(Long id){
         userRepository.deleteById(id);
         return "Utilisateur : "+id+", a été retirer";
+    }
+
+    public UserDto assignRole(UserDto userDto, Role role){
+        User user = userRepository.findById(userDto.getId()).orElseThrow(() -> new RuntimeException("Utilisateur introuvable."));
+        user.addRole(role);
+        return toDto(userRepository.save(user));
     }
 }

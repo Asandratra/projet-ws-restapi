@@ -40,7 +40,12 @@ public class DataSeeder implements ApplicationRunner {
             "ROLE_VIEW_USERS",
             "ROLE_ADD_USER",
             "ROLE_EDIT_USER",
-            "ROLE_DELETE_USER"
+            "ROLE_DELETE_USER",
+            "ROLE_VIEW_ROLES",
+            "ROLE_CREATE_ROLE",
+            "ROLE_EDIT_ROLE",
+            "ROLE_DELETE_ROLE",
+            "ROLE_ASSIGN_ROLE"
         );
 
         roleNames.forEach(name -> {
