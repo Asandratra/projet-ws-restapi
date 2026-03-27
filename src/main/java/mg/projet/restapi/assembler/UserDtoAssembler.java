@@ -20,6 +20,13 @@ public class UserDtoAssembler extends RepresentationModelAssemblerSupport<UserDt
     @Override
     public EntityModel<UserDto> toModel(UserDto userDto) {
         return EntityModel.of(userDto,
-            linkTo(methodOn(UserController.class).getAllUsers()).withRel("all-users"));
+            linkTo(methodOn(UserController.class).getAllUsers()).withRel("all-users"),
+            linkTo(methodOn(UserController.class).getUserById(userDto.getId())).withRel("user-profile"),
+            linkTo(methodOn(UserController.class).assignRole(null)).withRel("assign-role"),
+            linkTo(methodOn(UserController.class).updateUser(userDto.getId(), null)).withRel("update-user"),
+            linkTo(methodOn(UserController.class).changeUserPassword(userDto.getId(), null)).withRel("change-password"),
+            linkTo(methodOn(UserController.class).deleteUser(userDto.getId())).withRel("delete")
+
+        );
     }
 }

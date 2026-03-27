@@ -3,6 +3,7 @@ package mg.projet.restapi.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,8 @@ import mg.projet.restapi.dto.UserDto;
 import mg.projet.restapi.model.Role;
 import mg.projet.restapi.model.User;
 import mg.projet.restapi.repository.UserRepository;
+import mg.projet.restapi.request.ChangePasswordRequest;
+import mg.projet.restapi.request.UpdateUserRequest;
 
 @Service
 public class UserService {
@@ -49,10 +52,30 @@ public class UserService {
         return toDto(searchUser.get());
     }
 
-    public UserDto update(User user){
-        if(userRepository.findById(user.getId()).isEmpty()){
-            throw new RuntimeException("Utilisateur inexistant");
+    public UserDto update(Long id, UpdateUserRequest request){
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilisateur introuvable."));
+        if (!(request.nom().isEmpty()||request.nom().isBlank())) user.setNom(request.nom());
+        if (!(request.prenom().isEmpty()||request.prenom().isBlank())) user.setPrenom(request.prenom());
+        if (!(request.telephone().isEmpty()||request.telephone().isBlank())) user.setTelephone(request.telephone());
+        if (!(request.mail().isEmpty()||request.mail().isBlank())){
+            EmailValidator emailValidator = EmailValidator.getInstance();
+            if(!emailValidator.isValid(request.mail())){
+                throw new RuntimeException("Format email invalide.");
+            }
+            user.setMail(request.mail());
         }
+
+        return toDto(userRepository.save(user));
+    }
+
+    public UserDto changePassword(Long id, ChangePasswordRequest request){
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilisateur introuvable."));
+        if(!request.mdp().equals(request.confirmMdp())){
+            throw new RuntimeException("Erreur de confirmation de mot de passe.");
+        }
+
+        user.setMdp(request.mdp());
+
         return toDto(userRepository.save(user));
     }
 

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
@@ -20,8 +22,15 @@ import mg.projet.restapi.model.Role;
 public class JwtService {
     private String secretKey = "3aurSb9?)g9+J)2A,+w2f_ItHKJsy9L4p]@nw^%PsJ?";
 
+    @Autowired
+    private Environment environment;
+
     private Key getKey(){
         return Keys.hmacShaKeyFor(secretKey.getBytes());
+    }
+
+    public long getExpirationMs(){
+        return environment.getProperty("jwt.expiration", Long.class);
     }
 
     private Map<String, Object> userClaims(UserDto userDto){

@@ -42,7 +42,7 @@ public class AuthService{
 
             UserDto user = userService.toDto(userRepository.findByMail(loginRequest.mail()).orElseThrow(() -> new RuntimeException("Utilisateur introuvable")));
 
-            return jwtService.generateToken(user, loginRequest.milliseconds()<=0?1000*60*15:loginRequest.milliseconds());
+            return jwtService.generateToken(user, loginRequest.milliseconds()<=0?jwtService.getExpirationMs():loginRequest.milliseconds());
 
         } catch (Exception e){
             throw e;
