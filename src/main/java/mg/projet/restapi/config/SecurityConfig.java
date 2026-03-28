@@ -38,7 +38,9 @@ public class SecurityConfig {
                 .authenticationEntryPoint((req,res,ex1) -> {
                     res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     res.setContentType("application/json");
-                    res.getWriter().write("{\"error\": \"JWT manquant ou invalide.\"}");
+                    res.getWriter().write("""
+                        {"status": 401, "error": "AUTHENTICATION ERROR", "message": "JWT manquant ou invalide."}
+                    """);
                 })
                 .accessDeniedHandler((req,res,ex1) -> {
                     res.setStatus(HttpServletResponse.SC_FORBIDDEN);

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import mg.projet.restapi.model.HistoriqueAbonnement;
+import mg.projet.restapi.model.User;
 
 public interface HistoriqueAbonnementRepository extends JpaRepository<HistoriqueAbonnement, Long> {
 
@@ -20,4 +21,13 @@ public interface HistoriqueAbonnementRepository extends JpaRepository<Historique
     /** Calcul des revenus mensuels par rapport aux abonnements */
     @Query("SELECT COALESCE(SUM(ha.typeAbonnement.prix), 0) FROM HistoriqueAbonnement ha WHERE extract(year from ha.datePaiement) = :annee AND extract(month from ha.datePaiement) = :mois")
     Double findRevenusMensuelAbonnements(@Param("annee") int annee, @Param("mois") int mois);
+
+    List<HistoriqueAbonnement> findByUtilisateurOrderByDateExpirationDesc(User utilisateur);
+
+    @Query("SELECT COALESCE(SUM(ha.typeAbonnement.prix), 0) FROM HistoriqueAbonnement ha WHERE extract(year from ha.datePaiement) = :annee AND extract(month from ha.datePaiement) = :mois AND ha.utilisateur.id = :id")
+    Double findMontantAbonnementMensuelParUtilisateur(
+        @Param("annee") int annee,
+        @Param("mois") int mois,
+        @Param("id") Long id
+    );
 }

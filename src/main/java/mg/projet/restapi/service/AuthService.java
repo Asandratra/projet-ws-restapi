@@ -10,6 +10,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import mg.projet.restapi.dto.UserDto;
+import mg.projet.restapi.exception.InvalidRequestException;
+import mg.projet.restapi.exception.NotFoundException;
 import mg.projet.restapi.model.User;
 import mg.projet.restapi.repository.UserRepository;
 import mg.projet.restapi.request.CreateUserRequest;
@@ -40,11 +42,13 @@ public class AuthService{
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            UserDto user = userService.toDto(userRepository.findByMail(loginRequest.mail()).orElseThrow(() -> new RuntimeException("Utilisateur introuvable")));
+            UserDto user = userService.toDto(userRepository.findByMail(loginRequest.mail()).orElseThrow(() -> new NotFoundException("Utilisateur introuvable")));
 
-            return jwtService.generateToken(user, loginRequest.milliseconds()<=0?jwtService.getExpirationMs():loginRequest.milliseconds());
+            return jwtService.generateToken(user, jwtService.getExpirationMs());
 
-        } catch (Exception e){
+        } catch (NotFoundException e) {
+            throw e;
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -52,7 +56,7 @@ public class AuthService{
     public UserDto register(CreateUserRequest createUserRequest){
 
         if(!createUserRequest.mdp().equals(createUserRequest.confirmMdp())){
-            throw new RuntimeException("La confirmation de mot de passe invalide.");
+            throw new InvalidRequestException("La confirmation de mot de passe invalide.");
         }
         User user = new User();
         user.setDateentree(new Timestamp(System.currentTimeMillis()));

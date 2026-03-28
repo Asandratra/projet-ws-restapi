@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import mg.projet.restapi.dto.LivreDto;
+import mg.projet.restapi.exception.NotFoundException;
 import mg.projet.restapi.model.Livre;
 import mg.projet.restapi.model.TypeLivre;
 import mg.projet.restapi.repository.LivreRepository;
@@ -45,7 +46,7 @@ public class LivreService {
         TypeLivre typeLivre = null;
         if (request.typeLivreId() != null) {
             typeLivre = typeLivreRepository.findById(request.typeLivreId())
-                    .orElseThrow(() -> new RuntimeException("TypeLivre introuvable."));
+                    .orElseThrow(() -> new NotFoundException("TypeLivre introuvable."));
         }
         Livre livre = new Livre(
                 typeLivre,
@@ -72,17 +73,17 @@ public class LivreService {
     /** livre par son identifiant */
     public LivreDto findById(Long id) {
         Livre livre = livreRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Livre introuvable."));
+                .orElseThrow(() -> new NotFoundException("Livre introuvable."));
         return toDto(livre);
     }
 
     /** update livre existant */
     public LivreDto update(Long id, LivreRequest request) {
         Livre livre = livreRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Livre introuvable."));
+                .orElseThrow(() -> new NotFoundException("Livre introuvable."));
         if (request.typeLivreId() != null) {
             TypeLivre typeLivre = typeLivreRepository.findById(request.typeLivreId())
-                    .orElseThrow(() -> new RuntimeException("TypeLivre introuvable."));
+                    .orElseThrow(() -> new NotFoundException("TypeLivre introuvable."));
             livre.setTypeLivre(typeLivre);
         }
         livre.setTitre(request.titre());
@@ -101,7 +102,7 @@ public class LivreService {
     /** Supprime un livre par son identifiant */
     public void delete(Long id) {
         livreRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Livre introuvable."));
+                .orElseThrow(() -> new NotFoundException("Livre introuvable."));
         livreRepository.deleteById(id);
     }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import mg.projet.restapi.exception.NotFoundException;
 import mg.projet.restapi.model.Role;
 import mg.projet.restapi.repository.RoleRepository;
 import mg.projet.restapi.request.CreateRoleRequest;
@@ -25,16 +26,16 @@ public class RoleService {
     }
 
     public Role findById(Long id){
-        return roleRepository.findById(id).orElseThrow(() -> new RuntimeException("Role inexistant."));
+        return roleRepository.findById(id).orElseThrow(() -> new NotFoundException("Role introuvable."));
     }
 
     public void delete(Long id){
+        findById(id);
         roleRepository.deleteById(id);
     }
 
     public Role update(Long id, CreateRoleRequest request){
-        Role role = new Role();
-        role.setId(id);
+        Role role = findById(id);
         role.setName(request.name());
 
         return roleRepository.save(role);

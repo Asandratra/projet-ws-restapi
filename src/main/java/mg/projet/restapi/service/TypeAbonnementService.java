@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import mg.projet.restapi.dto.TypeAbonnementDto;
+import mg.projet.restapi.exception.NotFoundException;
 import mg.projet.restapi.model.TypeAbonnement;
 import mg.projet.restapi.repository.TypeAbonnementRepository;
 import mg.projet.restapi.request.TypeAbonnementRequest;
@@ -39,14 +40,14 @@ public class TypeAbonnementService {
     /** type d'abonnement par son identifiant */
     public TypeAbonnementDto findById(Long id) {
         TypeAbonnement ta = typeAbonnementRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("TypeAbonnement introuvable."));
+                .orElseThrow(() -> new NotFoundException("TypeAbonnement introuvable."));
         return toDto(ta);
     }
 
     /** update type d'abonnement existant */
     public TypeAbonnementDto update(Long id, TypeAbonnementRequest request) {
         TypeAbonnement ta = typeAbonnementRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("TypeAbonnement introuvable."));
+                .orElseThrow(() -> new NotFoundException("TypeAbonnement introuvable."));
         ta.setTypeAbonnement(request.typeAbonnement());
         ta.setPrix(request.prix());
         return toDto(typeAbonnementRepository.save(ta));
@@ -55,7 +56,7 @@ public class TypeAbonnementService {
     /** Supprime un type d'abonnement par son identifiant */
     public void delete(Long id) {
         typeAbonnementRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("TypeAbonnement introuvable."));
+                .orElseThrow(() -> new NotFoundException("TypeAbonnement introuvable."));
         typeAbonnementRepository.deleteById(id);
     }
 }

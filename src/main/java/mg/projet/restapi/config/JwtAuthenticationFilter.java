@@ -25,6 +25,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtService jwtService;
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.equals("/api/auth/login") || path.equals("/api/auth/register");
+    }
+
+    @Override
     protected void doFilterInternal(
         HttpServletRequest request,
         HttpServletResponse response,
@@ -36,7 +42,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if(!jwtService.isValid(token)){
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Jeton d'acces invalide");
+                response.getWriter().write("""
+                        {"status": 401, "error": "AUTHENTICATION ERROR", "message": "JWT manquant ou invalide."}
+                    """);
                 return;
             }
 

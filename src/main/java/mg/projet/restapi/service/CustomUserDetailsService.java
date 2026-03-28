@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import mg.projet.restapi.exception.NotFoundException;
 import mg.projet.restapi.model.User;
 import mg.projet.restapi.repository.UserRepository;
 
@@ -32,7 +33,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                         .credentialsExpired(false)
                         .disabled(!(user.getEtat()==1))
                         .build())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+                .orElseThrow(() -> new NotFoundException("Utilisateur introuvable : " + username));
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(User user) {

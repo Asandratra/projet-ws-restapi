@@ -12,6 +12,7 @@ import mg.projet.restapi.dto.LivrePopulaireDto;
 import mg.projet.restapi.dto.RevenusMensuelDto;
 import mg.projet.restapi.dto.TypeLivrePopulaireDto;
 import mg.projet.restapi.dto.ValiditeAbonnementDto;
+import mg.projet.restapi.exception.NotFoundException;
 import mg.projet.restapi.model.HistoriqueAbonnement;
 import mg.projet.restapi.model.Livre;
 import mg.projet.restapi.model.TypeLivre;
@@ -85,7 +86,7 @@ public class StatistiqueService {
     /** nombre total de consultations d'un livre */
     public ConsultationLivreDto getConsultationsByLivre(Long livreId) {
         Livre livre = livreRepository.findById(livreId)
-                .orElseThrow(() -> new RuntimeException("Livre introuvable."));
+                .orElseThrow(() -> new NotFoundException("Livre introuvable."));
         Long total = historiqueLectureRepo.countConsultationsByLivreId(livreId);
         return new ConsultationLivreDto(livre.getId(), livre.getTitre(), total);
     }
@@ -93,7 +94,7 @@ public class StatistiqueService {
     /** Vérification de la validité de l'abonnement d'un utilisateur */
     public ValiditeAbonnementDto checkValiditeAbonnement(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable."));
+                .orElseThrow(() -> new NotFoundException("Utilisateur introuvable."));
         List<HistoriqueAbonnement> abonnements = historiqueAbonnementRepo.findAbonnementsActifsByUserId(userId);
         if (abonnements.isEmpty()) {
             return new ValiditeAbonnementDto(userId, user.getNom(), false, null, null, "Aucun abonnement actif.");
