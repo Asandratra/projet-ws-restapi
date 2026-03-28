@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import mg.projet.restapi.dto.HistoriqueLectureDto;
+import mg.projet.restapi.exception.NotFoundException;
 import mg.projet.restapi.model.HistoriqueLecture;
 import mg.projet.restapi.model.Livre;
 import mg.projet.restapi.model.User;
@@ -41,9 +42,9 @@ public class HistoriqueLectureService {
         /** ajout nouvel historique de lecture */
         public HistoriqueLectureDto save(HistoriqueLectureRequest request) {
                 Livre livre = livreRepository.findById(request.livreId())
-                                .orElseThrow(() -> new RuntimeException("Livre introuvable."));
+                                .orElseThrow(() -> new NotFoundException("Livre introuvable."));
                 User user = userRepository.findById(request.utilisateurId())
-                                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable."));
+                                .orElseThrow(() -> new NotFoundException("Utilisateur introuvable."));
                 HistoriqueLecture hl = new HistoriqueLecture(null, request.dateLecture(), livre, user);
                 return toDto(historiqueLectureRepository.save(hl));
         }
@@ -59,18 +60,18 @@ public class HistoriqueLectureService {
         /** liste historique de lecture par son identifiant */
         public HistoriqueLectureDto findById(Long id) {
                 HistoriqueLecture hl = historiqueLectureRepository.findById(id)
-                                .orElseThrow(() -> new RuntimeException("HistoriqueLecture introuvable."));
+                                .orElseThrow(() -> new NotFoundException("HistoriqueLecture introuvable."));
                 return toDto(hl);
         }
 
         /** update historique de lecture existant */
         public HistoriqueLectureDto update(Long id, HistoriqueLectureRequest request) {
                 HistoriqueLecture hl = historiqueLectureRepository.findById(id)
-                                .orElseThrow(() -> new RuntimeException("HistoriqueLecture introuvable."));
+                                .orElseThrow(() -> new NotFoundException("HistoriqueLecture introuvable."));
                 Livre livre = livreRepository.findById(request.livreId())
-                                .orElseThrow(() -> new RuntimeException("Livre introuvable."));
+                                .orElseThrow(() -> new NotFoundException("Livre introuvable."));
                 User user = userRepository.findById(request.utilisateurId())
-                                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable."));
+                                .orElseThrow(() -> new NotFoundException("Utilisateur introuvable."));
                 hl.setDateLecture(request.dateLecture());
                 hl.setLivre(livre);
                 hl.setUtilisateur(user);
@@ -80,7 +81,15 @@ public class HistoriqueLectureService {
         /** Supprime un historique de lecture par son identifiant */
         public void delete(Long id) {
                 historiqueLectureRepository.findById(id)
-                                .orElseThrow(() -> new RuntimeException("HistoriqueLecture introuvable."));
+                                .orElseThrow(() -> new NotFoundException("HistoriqueLecture introuvable."));
                 historiqueLectureRepository.deleteById(id);
+        }
+
+        public List<HistoriqueLectureDto> findLectureByUser(User utilisateur){
+                List<HistoriqueLecture> history = historiqueLectureRepository.findByUtilisateurOrderByDateLectureDesc(utilisateur);
+
+                return history.stream()
+                        .map(this::toDto)
+                        .collect(Collectors.toList());
         }
 }

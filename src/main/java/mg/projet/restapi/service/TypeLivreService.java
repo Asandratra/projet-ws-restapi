@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import mg.projet.restapi.dto.TypeLivreDto;
+import mg.projet.restapi.exception.NotFoundException;
 import mg.projet.restapi.model.TypeLivre;
 import mg.projet.restapi.repository.TypeLivreRepository;
 import mg.projet.restapi.request.TypeLivreRequest;
@@ -35,20 +36,20 @@ public class TypeLivreService {
 
     public TypeLivreDto findById(Long id) {
         TypeLivre typeLivre = typeLivreRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("TypeLivre inexistant."));
+                .orElseThrow(() -> new NotFoundException("TypeLivre inexistant."));
         return toDto(typeLivre);
     }
 
     public TypeLivreDto update(Long id, TypeLivreRequest request) {
         TypeLivre typeLivre = typeLivreRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("TypeLivre inexistant."));
+                .orElseThrow(() -> new NotFoundException("TypeLivre inexistant."));
         typeLivre.setType_livre(request.type_livre());
         return toDto(typeLivreRepository.save(typeLivre));
     }
 
     public void delete(Long id) {
         typeLivreRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("TypeLivre inexistant."));
+                .orElseThrow(() -> new NotFoundException("TypeLivre inexistant."));
         typeLivreRepository.deleteById(id);
     }
 }

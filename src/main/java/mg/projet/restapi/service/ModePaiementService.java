@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import mg.projet.restapi.dto.ModePaiementDto;
+import mg.projet.restapi.exception.NotFoundException;
 import mg.projet.restapi.model.ModePaiement;
 import mg.projet.restapi.repository.ModePaiementRepository;
 import mg.projet.restapi.request.ModePaiementRequest;
@@ -38,14 +39,14 @@ public class ModePaiementService {
     /** un mode de paiement par son identifiant */
     public ModePaiementDto findById(Long id) {
         ModePaiement mp = modePaiementRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("ModePaiement introuvable."));
+                .orElseThrow(() -> new NotFoundException("ModePaiement introuvable."));
         return toDto(mp);
     }
 
     /** update mode de paiement existant */
     public ModePaiementDto update(Long id, ModePaiementRequest request) {
         ModePaiement mp = modePaiementRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("ModePaiement introuvable."));
+                .orElseThrow(() -> new NotFoundException("ModePaiement introuvable."));
         mp.setMode(request.mode());
         return toDto(modePaiementRepository.save(mp));
     }
@@ -53,7 +54,7 @@ public class ModePaiementService {
     /** Supprime un mode de paiement par son identifiant */
     public void delete(Long id) {
         modePaiementRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("ModePaiement introuvable."));
+                .orElseThrow(() -> new NotFoundException("ModePaiement introuvable."));
         modePaiementRepository.deleteById(id);
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import mg.projet.restapi.dto.HistoriquePaiementLivreDto;
+import mg.projet.restapi.exception.NotFoundException;
 import mg.projet.restapi.model.HistoriquePaiementLivre;
 import mg.projet.restapi.model.Livre;
 import mg.projet.restapi.model.User;
@@ -42,9 +43,9 @@ public class HistoriquePaiementLivreService {
         /** ajout nouvel historique de paiement de livre */
         public HistoriquePaiementLivreDto save(HistoriquePaiementLivreRequest request) {
                 Livre livre = livreRepository.findById(request.livreId())
-                                .orElseThrow(() -> new RuntimeException("Livre introuvable."));
+                                .orElseThrow(() -> new NotFoundException("Livre introuvable."));
                 User user = userRepository.findById(request.utilisateurId())
-                                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable."));
+                                .orElseThrow(() -> new NotFoundException("Utilisateur introuvable."));
                 HistoriquePaiementLivre hpl = new HistoriquePaiementLivre(
                                 null, request.dateLecture(), livre, user, request.prix());
                 return toDto(historiquePaiementLivreRepository.save(hpl));
@@ -61,18 +62,18 @@ public class HistoriquePaiementLivreService {
         /** historique de paiement de livre par son identifiant */
         public HistoriquePaiementLivreDto findById(Long id) {
                 HistoriquePaiementLivre hpl = historiquePaiementLivreRepository.findById(id)
-                                .orElseThrow(() -> new RuntimeException("HistoriquePaiementLivre introuvable."));
+                                .orElseThrow(() -> new NotFoundException("HistoriquePaiementLivre introuvable."));
                 return toDto(hpl);
         }
 
         /** update historique de paiement de livre existant */
         public HistoriquePaiementLivreDto update(Long id, HistoriquePaiementLivreRequest request) {
                 HistoriquePaiementLivre hpl = historiquePaiementLivreRepository.findById(id)
-                                .orElseThrow(() -> new RuntimeException("HistoriquePaiementLivre introuvable."));
+                                .orElseThrow(() -> new NotFoundException("HistoriquePaiementLivre introuvable."));
                 Livre livre = livreRepository.findById(request.livreId())
-                                .orElseThrow(() -> new RuntimeException("Livre introuvable."));
+                                .orElseThrow(() -> new NotFoundException("Livre introuvable."));
                 User user = userRepository.findById(request.utilisateurId())
-                                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable."));
+                                .orElseThrow(() -> new NotFoundException("Utilisateur introuvable."));
                 hpl.setDateLecture(request.dateLecture());
                 hpl.setLivre(livre);
                 hpl.setUtilisateur(user);
@@ -83,7 +84,19 @@ public class HistoriquePaiementLivreService {
         /** Supprime un historique de paiement de livre par son identifiant */
         public void delete(Long id) {
                 historiquePaiementLivreRepository.findById(id)
-                                .orElseThrow(() -> new RuntimeException("HistoriquePaiementLivre introuvable."));
+                                .orElseThrow(() -> new NotFoundException("HistoriquePaiementLivre introuvable."));
                 historiquePaiementLivreRepository.deleteById(id);
+        }
+
+        public List<HistoriquePaiementLivreDto> findByUtilisateur(User utilisateur){
+                List<HistoriquePaiementLivre> history = historiquePaiementLivreRepository.findByUtilisateurOrderByDateLectureDesc(utilisateur);
+
+                return history.stream()
+                        .map(this::toDto)
+                        .collect(Collectors.toList());
+        }
+
+        public Double findMontantMensuelByUser(int annee, int mois, Long id){
+                return historiquePaiementLivreRepository.findMontantPaiementMensuelLivresParUtilisateur(annee, mois, id);
         }
 }

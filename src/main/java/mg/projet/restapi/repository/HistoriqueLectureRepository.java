@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import mg.projet.restapi.model.HistoriqueLecture;
+import mg.projet.restapi.model.User;
 
 public interface HistoriqueLectureRepository extends JpaRepository<HistoriqueLecture, Long> {
 
@@ -25,4 +26,6 @@ public interface HistoriqueLectureRepository extends JpaRepository<HistoriqueLec
     /** nombre total de consultations d'un livre */
     @Query("SELECT COUNT(hl) FROM HistoriqueLecture hl WHERE hl.livre.id = :livreId")
     Long countConsultationsByLivreId(@Param("livreId") Long livreId);
+
+    List<HistoriqueLecture> findByUtilisateurOrderByDateLectureDesc(User utilisateur);
 }

@@ -1,8 +1,10 @@
 package mg.projet.restapi.request;
 
+import jakarta.validation.constraints.NotNull;
+
 public record AssignRoleRequest(
-    Long idUser,
-    Long idRole
+    @NotNull Long idUser,
+    @NotNull Long idRole
 ) {
 
 }

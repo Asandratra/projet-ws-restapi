@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import mg.projet.restapi.dto.HistoriqueAbonnementDto;
+import mg.projet.restapi.exception.NotFoundException;
 import mg.projet.restapi.model.HistoriqueAbonnement;
 import mg.projet.restapi.model.ModePaiement;
 import mg.projet.restapi.model.TypeAbonnement;
@@ -50,11 +51,11 @@ public class HistoriqueAbonnementService {
         /** ajout historique d'abonnement */
         public HistoriqueAbonnementDto save(HistoriqueAbonnementRequest request) {
                 User user = userRepository.findById(request.utilisateurId())
-                                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable."));
+                                .orElseThrow(() -> new NotFoundException("Utilisateur introuvable."));
                 TypeAbonnement typeAbonnement = typeAbonnementRepository.findById(request.typeAbonnementId())
-                                .orElseThrow(() -> new RuntimeException("TypeAbonnement introuvable."));
+                                .orElseThrow(() -> new NotFoundException("TypeAbonnement introuvable."));
                 ModePaiement modePaiement = modePaiementRepository.findById(request.modePaiementId())
-                                .orElseThrow(() -> new RuntimeException("ModePaiement introuvable."));
+                                .orElseThrow(() -> new NotFoundException("ModePaiement introuvable."));
                 HistoriqueAbonnement ha = new HistoriqueAbonnement(
                                 null,
                                 request.datePaiement(),
@@ -76,20 +77,20 @@ public class HistoriqueAbonnementService {
         /** liste historique d'abonnement par son identifiant */
         public HistoriqueAbonnementDto findById(Long id) {
                 HistoriqueAbonnement ha = historiqueAbonnementRepository.findById(id)
-                                .orElseThrow(() -> new RuntimeException("HistoriqueAbonnement introuvable."));
+                                .orElseThrow(() -> new NotFoundException("HistoriqueAbonnement introuvable."));
                 return toDto(ha);
         }
 
         /** update historique d'abonnement existant */
         public HistoriqueAbonnementDto update(Long id, HistoriqueAbonnementRequest request) {
                 HistoriqueAbonnement ha = historiqueAbonnementRepository.findById(id)
-                                .orElseThrow(() -> new RuntimeException("HistoriqueAbonnement introuvable."));
+                                .orElseThrow(() -> new NotFoundException("HistoriqueAbonnement introuvable."));
                 User user = userRepository.findById(request.utilisateurId())
-                                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable."));
+                                .orElseThrow(() -> new NotFoundException("Utilisateur introuvable."));
                 TypeAbonnement typeAbonnement = typeAbonnementRepository.findById(request.typeAbonnementId())
-                                .orElseThrow(() -> new RuntimeException("TypeAbonnement introuvable."));
+                                .orElseThrow(() -> new NotFoundException("TypeAbonnement introuvable."));
                 ModePaiement modePaiement = modePaiementRepository.findById(request.modePaiementId())
-                                .orElseThrow(() -> new RuntimeException("ModePaiement introuvable."));
+                                .orElseThrow(() -> new NotFoundException("ModePaiement introuvable."));
                 ha.setDatePaiement(request.datePaiement());
                 ha.setTypeAbonnement(typeAbonnement);
                 ha.setModePaiement(modePaiement);
@@ -101,7 +102,19 @@ public class HistoriqueAbonnementService {
         /** Supprime un historique d'abonnement par son identifiant */
         public void delete(Long id) {
                 historiqueAbonnementRepository.findById(id)
-                                .orElseThrow(() -> new RuntimeException("HistoriqueAbonnement introuvable."));
+                                .orElseThrow(() -> new NotFoundException("HistoriqueAbonnement introuvable."));
                 historiqueAbonnementRepository.deleteById(id);
+        }
+
+        public List<HistoriqueAbonnementDto> findAbonnementByUser(User utilisateur){
+                List<HistoriqueAbonnement> history = historiqueAbonnementRepository.findByUtilisateurOrderByDateExpirationDesc(utilisateur);
+
+                return history.stream()
+                        .map(this::toDto)
+                        .collect(Collectors.toList());
+        }
+
+        public Double findMontantMensuelParUtilisateur(int annee, int mois, Long id){
+                return historiqueAbonnementRepository.findMontantAbonnementMensuelParUtilisateur(annee, mois, id);
         }
 }

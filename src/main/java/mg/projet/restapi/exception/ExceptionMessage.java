@@ -1,6 +1,6 @@
 package mg.projet.restapi.exception;
 
-import java.security.Timestamp;
+import java.time.Instant;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,5 +15,6 @@ public class ExceptionMessage {
     private int status;
     private String message;
     private String error;
-    private Timestamp timestamp;
+    private Instant timestamp;
+    private String uri;
 }

@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import mg.projet.restapi.dto.UserDto;
+import mg.projet.restapi.exception.NotFoundException;
 import mg.projet.restapi.model.Role;
 import mg.projet.restapi.model.User;
 import mg.projet.restapi.repository.UserRepository;
@@ -47,20 +48,20 @@ public class UserService {
     public UserDto findById(Long id){
         Optional<User> searchUser = userRepository.findById(id);
         if(searchUser.isEmpty()){
-            throw new RuntimeException("Utilisateur introuvable");
+            throw new NotFoundException("Utilisateur introuvable");
         }
         return toDto(searchUser.get());
     }
 
     public UserDto update(Long id, UpdateUserRequest request){
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilisateur introuvable."));
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Utilisateur introuvable."));
         if (!(request.nom().isEmpty()||request.nom().isBlank())) user.setNom(request.nom());
         if (!(request.prenom().isEmpty()||request.prenom().isBlank())) user.setPrenom(request.prenom());
         if (!(request.telephone().isEmpty()||request.telephone().isBlank())) user.setTelephone(request.telephone());
         if (!(request.mail().isEmpty()||request.mail().isBlank())){
             EmailValidator emailValidator = EmailValidator.getInstance();
             if(!emailValidator.isValid(request.mail())){
-                throw new RuntimeException("Format email invalide.");
+                throw new NotFoundException("Format email invalide.");
             }
             user.setMail(request.mail());
         }
@@ -69,9 +70,9 @@ public class UserService {
     }
 
     public UserDto changePassword(Long id, ChangePasswordRequest request){
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilisateur introuvable."));
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Utilisateur introuvable."));
         if(!request.mdp().equals(request.confirmMdp())){
-            throw new RuntimeException("Erreur de confirmation de mot de passe.");
+            throw new NotFoundException("Erreur de confirmation de mot de passe.");
         }
 
         user.setMdp(request.mdp());
@@ -85,7 +86,7 @@ public class UserService {
     }
 
     public UserDto assignRole(UserDto userDto, Role role){
-        User user = userRepository.findById(userDto.getId()).orElseThrow(() -> new RuntimeException("Utilisateur introuvable."));
+        User user = userRepository.findById(userDto.getId()).orElseThrow(() -> new NotFoundException("Utilisateur introuvable."));
         user.addRole(role);
         return toDto(userRepository.save(user));
     }
