@@ -10,6 +10,24 @@ Ce projet a pour objectif de fournir une API RESTful complète pour la gestion d
 
 ---
 
+## Accès
+**Localement**
+| Interface | URL |
+|-----------|-----|
+| API | `http://localhost:8080` |
+| Swagger UI | `http://localhost:8080/swagger-ui/index.html` |
+| Docs JSON | `http://localhost:8080/v3/api-docs` |
+
+**Déploiement**
+| Interface | URL |
+|-----------|-----|
+| API | `https://restapi-kanto-asandratra.onrender.com` |
+| Swagger UI | `https://restapi-kanto-asandratra.onrender.com/swagger-ui/index.html` |
+| Docs JSON | `https://restapi-kanto-asandratra.onrender.com/v3/api-docs` |
+>Déploiement gratuit avec Render
+
+---
+
 ## Stack technique
 
 - **Java 21** + **Spring Boot 4.0.3**
@@ -112,22 +130,6 @@ Les mots de passe sont chiffrés avec **BCrypt** avant stockage. Ils ne sont jam
 ```bash
 ./mvnw spring-boot:run
 ```
-
-### Accès
-**Localement**
-| Interface | URL |
-|-----------|-----|
-| API | `http://localhost:8080` |
-| Swagger UI | `http://localhost:8080/swagger-ui/index.html` |
-| Docs JSON | `http://localhost:8080/v3/api-docs` |
-
-**Déploiement**
-| Interface | URL |
-|-----------|-----|
-| API | `https://restapi-kanto-asandratra.onrender.com` |
-| Swagger UI | `https://restapi-kanto-asandratra.onrender.com/swagger-ui/index.html` |
-| Docs JSON | `https://restapi-kanto-asandratra.onrender.com/v3/api-docs` |
->Déploiement gratuit avec Render
 
 **Credentials H2 :**
 - JDBC URL : `jdbc:h2:mem:bibliotheque`
