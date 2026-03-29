@@ -62,8 +62,8 @@ public class LivreService {
     }
 
     /** liste des livres avec filtres */
-    public List<LivreDto> findAll(String titre, String auteur, Integer etat, Long typeLivreId) {
-        return livreRepository.findWithFilters(titre, auteur, etat, typeLivreId)
+    public List<LivreDto> findAll(String titre, String auteur, String typeLivreNom) {
+        return livreRepository.findWithFilters(titre, auteur, typeLivreNom)
                 .stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
