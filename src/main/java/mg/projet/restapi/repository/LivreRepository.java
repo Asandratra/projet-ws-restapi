@@ -16,10 +16,8 @@ public interface LivreRepository extends JpaRepository<Livre, Long> {
        @Query("SELECT l FROM Livre l WHERE " +
                      "(:titre IS NULL OR LOWER(l.titre) LIKE LOWER(CONCAT('%', :titre, '%'))) AND " +
                      "(:auteur IS NULL OR LOWER(l.auteur) LIKE LOWER(CONCAT('%', :auteur, '%'))) AND " +
-                     "(:etat IS NULL OR l.etat = :etat) AND " +
-                     "(:typeLivreId IS NULL OR l.typeLivre.id = :typeLivreId)")
+                     "(:typeLivre IS NULL OR LOWER(l.typeLivre.type_livre) LIKE LOWER(CONCAT('%', :typeLivre, '%')))")
        List<Livre> findWithFilters(@Param("titre") String titre,
                      @Param("auteur") String auteur,
-                     @Param("etat") Integer etat,
-                     @Param("typeLivreId") Long typeLivreId);
+                     @Param("typeLivre") String typeLivre);
 }

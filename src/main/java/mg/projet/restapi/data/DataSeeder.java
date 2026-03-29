@@ -28,51 +28,47 @@ public class DataSeeder implements ApplicationRunner {
     private RoleRepository roleRepository;
 
     @Override
-    public void run(ApplicationArguments args){
+    public void run(ApplicationArguments args) {
         seedRoles();
         seedUsers();
     }
 
     private void seedRoles() {
         List<String> roleNames = List.of(
-            "ROLE_ADMIN",
-            "ROLE_USER",
-            "ROLE_VIEW_USERS",
-            "ROLE_ADD_USER",
-            "ROLE_EDIT_USER",
-            "ROLE_DELETE_USER",
-            "ROLE_VIEW_ROLES",
-            "ROLE_CREATE_ROLE",
-            "ROLE_EDIT_ROLE",
-            "ROLE_DELETE_ROLE",
-            "ROLE_ASSIGN_ROLE"
-        );
+                "ROLE_ADMIN",
+                "ROLE_USER",
+                "ROLE_VIEW_USERS",
+                "ROLE_ADD_USER",
+                "ROLE_EDIT_USER",
+                "ROLE_DELETE_USER",
+                "ROLE_VIEW_ROLES",
+                "ROLE_CREATE_ROLE",
+                "ROLE_EDIT_ROLE",
+                "ROLE_DELETE_ROLE",
+                "ROLE_ASSIGN_ROLE");
 
         roleNames.forEach(name -> {
-            if(roleRepository.findByName(name).isEmpty()){
+            if (roleRepository.findByName(name).isEmpty()) {
                 roleRepository.save(new Role(name));
             }
         });
     }
 
-    private void seedUsers(){
+    private void seedUsers() {
         List<User> seeds = List.of(
-            new User("Admin",     "System",  "0331849367",  "admin@mail.com", "admin123",  List.of(
-                roleRepository.findByName("ROLE_ADMIN").get(),
-                roleRepository.findByName("ROLE_VIEW_USERS").get(),
-                roleRepository.findByName("ROLE_ADD_USER").get(),
-                roleRepository.findByName("ROLE_EDIT_USER").get(),
-                roleRepository.findByName("ROLE_DELETE_USER").get()
-            )),
-            new User("Moderator",     "System",  "0371046392",  "moderator@mail.com", "mod123",  List.of(
-                roleRepository.findByName("ROLE_USER").get(),
-                roleRepository.findByName("ROLE_VIEW_USERS").get(),
-                roleRepository.findByName("ROLE_ADD_USER").get()
-            ))
-        );
+                new User("Admin", "System", "0331849367", "admin@mail.com", "admin123", List.of(
+                        roleRepository.findByName("ROLE_ADMIN").get(),
+                        roleRepository.findByName("ROLE_VIEW_USERS").get(),
+                        roleRepository.findByName("ROLE_ADD_USER").get(),
+                        roleRepository.findByName("ROLE_EDIT_USER").get(),
+                        roleRepository.findByName("ROLE_DELETE_USER").get())),
+                new User("Moderator", "System", "0371046392", "moderator@mail.com", "mod123", List.of(
+                        roleRepository.findByName("ROLE_USER").get(),
+                        roleRepository.findByName("ROLE_VIEW_USERS").get(),
+                        roleRepository.findByName("ROLE_ADD_USER").get())));
 
         seeds.forEach(user -> {
-            if(userRepository.findByMail(user.getMail()).isEmpty()){
+            if (userRepository.findByMail(user.getMail()).isEmpty()) {
                 userService.save(user);
             }
         });

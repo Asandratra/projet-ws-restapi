@@ -49,14 +49,13 @@ public class LivreController {
     public CollectionModel<EntityModel<LivreDto>> getAll(
             @RequestParam(required = false) String titre,
             @RequestParam(required = false) String auteur,
-            @RequestParam(required = false) Integer etat,
-            @RequestParam(required = false) Long typeLivreId) {
-        List<EntityModel<LivreDto>> list = livreService.findAll(titre, auteur, etat, typeLivreId)
+            @RequestParam(required = false) String typeLivre) {
+        List<EntityModel<LivreDto>> list = livreService.findAll(titre, auteur, typeLivre)
                 .stream()
                 .map(livreAssembler::toModel)
                 .collect(Collectors.toList());
         return CollectionModel.of(list,
-                linkTo(methodOn(LivreController.class).getAll(null, null, null, null)).withSelfRel());
+                linkTo(methodOn(LivreController.class).getAll(null, null, null)).withSelfRel());
     }
 
     @GetMapping("/{id}")

@@ -22,6 +22,6 @@ public class LivreAssembler extends RepresentationModelAssemblerSupport<LivreDto
     public EntityModel<LivreDto> toModel(LivreDto livreDto) {
         return EntityModel.of(livreDto,
                 linkTo(methodOn(LivreController.class).getById(livreDto.getId())).withSelfRel(),
-                linkTo(methodOn(LivreController.class).getAll(null, null, null, null)).withRel("all-livres"));
+                linkTo(methodOn(LivreController.class).getAll(null, null, null)).withRel("all-livres"));
     }
 }

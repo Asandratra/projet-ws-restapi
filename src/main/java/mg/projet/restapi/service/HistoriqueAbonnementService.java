@@ -62,7 +62,7 @@ public class HistoriqueAbonnementService {
                                 typeAbonnement,
                                 modePaiement,
                                 user,
-                                request.dateExpiration());
+                                request.datePaiement().plusMonths(1));
                 return toDto(historiqueAbonnementRepository.save(ha));
         }
 
@@ -95,7 +95,7 @@ public class HistoriqueAbonnementService {
                 ha.setTypeAbonnement(typeAbonnement);
                 ha.setModePaiement(modePaiement);
                 ha.setUtilisateur(user);
-                ha.setDateExpiration(request.dateExpiration());
+                ha.setDateExpiration(request.datePaiement().plusMonths(1));
                 return toDto(historiqueAbonnementRepository.save(ha));
         }
 
@@ -106,15 +106,16 @@ public class HistoriqueAbonnementService {
                 historiqueAbonnementRepository.deleteById(id);
         }
 
-        public List<HistoriqueAbonnementDto> findAbonnementByUser(User utilisateur){
-                List<HistoriqueAbonnement> history = historiqueAbonnementRepository.findByUtilisateurOrderByDateExpirationDesc(utilisateur);
+        public List<HistoriqueAbonnementDto> findAbonnementByUser(User utilisateur) {
+                List<HistoriqueAbonnement> history = historiqueAbonnementRepository
+                                .findByUtilisateurOrderByDateExpirationDesc(utilisateur);
 
                 return history.stream()
-                        .map(this::toDto)
-                        .collect(Collectors.toList());
+                                .map(this::toDto)
+                                .collect(Collectors.toList());
         }
 
-        public Double findMontantMensuelParUtilisateur(int annee, int mois, Long id){
+        public Double findMontantMensuelParUtilisateur(int annee, int mois, Long id) {
                 return historiqueAbonnementRepository.findMontantAbonnementMensuelParUtilisateur(annee, mois, id);
         }
 }
