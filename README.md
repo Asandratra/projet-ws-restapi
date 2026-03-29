@@ -67,7 +67,7 @@ L'API utilise des **JSON Web Tokens (JWT)** pour authentifier les requêtes.
 Authorization: Bearer <token>
 ```
 
-- Durée de validité par défaut : **15 minutes** (configurable via `jwt.expiration`)
+- Durée de validité par défaut : **Une heure** (configurable via `jwt.expiration`)
 - Algorithme de signature : **HS256**
 - Le token embarque les informations de l'utilisateur : id, nom, prénom, email, rôles
 
@@ -103,8 +103,6 @@ Les endpoints suivants sont accessibles sans authentification :
 
 Les mots de passe sont chiffrés avec **BCrypt** avant stockage. Ils ne sont jamais retournés dans les réponses de l'API.
 
-
-
 ### Prérequis
 
 - Java 21+
@@ -116,11 +114,20 @@ Les mots de passe sont chiffrés avec **BCrypt** avant stockage. Ils ne sont jam
 ```
 
 ### Accès
-
+**Localement**
 | Interface | URL |
 |-----------|-----|
 | API | `http://localhost:8080` |
 | Swagger UI | `http://localhost:8080/swagger-ui/index.html` |
+| Docs JSON | `http://localhost:8080/v3/api-docs` |
+
+**Déploiement**
+| Interface | URL |
+|-----------|-----|
+| API | `https://restapi-kanto-asandratra.onrender.com` |
+| Swagger UI | `https://restapi-kanto-asandratra.onrender.com/swagger-ui/index.html` |
+| Docs JSON | `https://restapi-kanto-asandratra.onrender.com/v3/api-docs` |
+>Déploiement gratuit avec Render
 
 **Credentials H2 :**
 - JDBC URL : `jdbc:h2:mem:bibliotheque`
