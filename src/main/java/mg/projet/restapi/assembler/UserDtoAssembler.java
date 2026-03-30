@@ -34,7 +34,7 @@ public class UserDtoAssembler extends RepresentationModelAssemblerSupport<UserDt
             linkTo(methodOn(UserController.class).getHistoriqueAbonnement(userDto.getId())).withRel("view-subscription-history"),
             linkTo(methodOn(UserController.class).getHistoriqueLecture(userDto.getId())).withRel("view-read-history"),
             linkTo(methodOn(UserController.class).getHistoriquePaiement(userDto.getId())).withRel("view-pay-history"),
-            linkTo(methodOn(UserController.class).getMontantMensuel(userDto.getId(), annee, mois)).withRel("view-pay-history")
+            linkTo(methodOn(UserController.class).getMontantMensuel(userDto.getId(), annee, mois)).withRel("view-monthly-amount")
         );
     }
 }
