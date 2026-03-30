@@ -1,0 +1,707 @@
+{
+  "info": {
+    "name": "Bibliothèque REST API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "token",   "value": "" }
+  ],
+  "item": [
+
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api","auth","login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mail\": \"admin@mail.com\",\n  \"mdp\": \"admin123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api","auth","register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Rakoto\",\n  \"prenom\": \"Jean\",\n  \"telephone\": \"0341234567\",\n  \"mail\": \"jean@mail.com\",\n  \"mdp\": \"password123\",\n  \"confirmMdp\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update JWT Expiration (ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/config/jwt-expiration?duration=10800000",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","auth","config","jwt-expiration"],
+              "query": [{ "key": "duration", "value": "10800000" }]
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Roles",
+      "item": [
+        {
+          "name": "Create Role",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/role", "host": ["{{baseUrl}}"], "path": ["api","role"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"ROLE_USER\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Roles",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/role", "host": ["{{baseUrl}}"], "path": ["api","role"] }
+          }
+        },
+        {
+          "name": "Get Role by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/role/1", "host": ["{{baseUrl}}"], "path": ["api","role","1"] }
+          }
+        },
+        {
+          "name": "Update Role",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/role/1", "host": ["{{baseUrl}}"], "path": ["api","role","1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"ROLE_MEMBER\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Role",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/role/1", "host": ["{{baseUrl}}"], "path": ["api","role","1"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users (ADMIN / VIEW_USERS)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/users", "host": ["{{baseUrl}}"], "path": ["api","users"] }
+          }
+        },
+        {
+          "name": "Get User by ID (ADMIN / VIEW_USERS)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/users/1", "host": ["{{baseUrl}}"], "path": ["api","users","1"] }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/users/update/3", "host": ["{{baseUrl}}"], "path": ["api","users","update","1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Rakoto\",\n  \"prenom\": \"Jean\",\n  \"telephone\": \"0349999999\",\n  \"mail\": \"jean@mail.com\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/users/change-password/3", "host": ["{{baseUrl}}"], "path": ["api","users","change-password","1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mdp\": \"newpassword123\",\n  \"confirmMdp\": \"newpassword123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete User (ADMIN)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/users/1", "host": ["{{baseUrl}}"], "path": ["api","users","1"] }
+          }
+        },
+        {
+          "name": "Assign Role (ADMIN / ASSIGN_ROLE)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/users/assign-role", "host": ["{{baseUrl}}"], "path": ["api","users","assign-role"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idUser\": 1,\n  \"idRole\": 2\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Subscription History by User",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/users/subscription-history/1", "host": ["{{baseUrl}}"], "path": ["api","users","subscription-history","1"] }
+          }
+        },
+        {
+          "name": "Get Read History by User",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/users/read-history/1", "host": ["{{baseUrl}}"], "path": ["api","users","read-history","1"] }
+          }
+        },
+        {
+          "name": "Get Payment History by User",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/users/pay-history/1", "host": ["{{baseUrl}}"], "path": ["api","users","pay-history","1"] }
+          }
+        },
+        {
+          "name": "Get Monthly Amount by User",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/users/amount/1/2026/3",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","users","amount","1","2026","3"]
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Type Livre",
+      "item": [
+        {
+          "name": "Create Type Livre",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/type-livre", "host": ["{{baseUrl}}"], "path": ["api","type-livre"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type_livre\": \"Roman\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Types Livre",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/type-livre", "host": ["{{baseUrl}}"], "path": ["api","type-livre"] }
+          }
+        },
+        {
+          "name": "Get Type Livre by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/type-livre/1", "host": ["{{baseUrl}}"], "path": ["api","type-livre","1"] }
+          }
+        },
+        {
+          "name": "Update Type Livre",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/type-livre/1", "host": ["{{baseUrl}}"], "path": ["api","type-livre","1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type_livre\": \"Aventure\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Type Livre",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/type-livre/1", "host": ["{{baseUrl}}"], "path": ["api","type-livre","1"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Livres",
+      "item": [
+        {
+          "name": "Create Livre (ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/livres", "host": ["{{baseUrl}}"], "path": ["api","livres"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"typeLivreId\": 1,\n  \"titre\": \"Le Petit Prince\",\n  \"sousTitre\": null,\n  \"saison\": null,\n  \"auteur\": \"Antoine de Saint-Exupéry\",\n  \"dateEdition\": \"1943-04-06\",\n  \"description\": \"Un conte poétique et philosophique\",\n  \"image\": null,\n  \"document\": null,\n  \"etat\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Livres",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/livres", "host": ["{{baseUrl}}"], "path": ["api","livres"] }
+          }
+        },
+        {
+          "name": "Get All Livres - Filtre titre",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/livres?titre=prince",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","livres"],
+              "query": [{ "key": "titre", "value": "prince" }]
+            }
+          }
+        },
+        {
+          "name": "Get All Livres - Filtre auteur",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/livres?auteur=hugo",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","livres"],
+              "query": [{ "key": "auteur", "value": "hugo" }]
+            }
+          }
+        },
+        {
+          "name": "Get All Livres - Filtre typeLivre",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/livres?typeLivre=roman",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","livres"],
+              "query": [{ "key": "typeLivre", "value": "roman" }]
+            }
+          }
+        },
+        {
+          "name": "Get All Livres - Tous les filtres",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/livres?titre=&auteur=&typeLivre=aventure",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","livres"],
+              "query": [
+                { "key": "titre", "value": "" },
+                { "key": "auteur", "value": "" },
+                { "key": "typeLivre", "value": "aventure" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Livre by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/livres/1", "host": ["{{baseUrl}}"], "path": ["api","livres","1"] }
+          }
+        },
+        {
+          "name": "Update Livre (ADMIN)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/livres/1", "host": ["{{baseUrl}}"], "path": ["api","livres","1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"typeLivreId\": 1,\n  \"titre\": \"Le Petit Prince\",\n  \"sousTitre\": \"Edition spéciale\",\n  \"saison\": null,\n  \"auteur\": \"Antoine de Saint-Exupéry\",\n  \"dateEdition\": \"1943-04-06\",\n  \"description\": \"Un conte poétique et philosophique\",\n  \"image\": null,\n  \"document\": null,\n  \"etat\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Livre (ADMIN)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/livres/1", "host": ["{{baseUrl}}"], "path": ["api","livres","1"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Type Abonnement",
+      "item": [
+        {
+          "name": "Create Type Abonnement (ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/type-abonnement", "host": ["{{baseUrl}}"], "path": ["api","type-abonnement"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"typeAbonnement\": \"Premium\",\n  \"prix\": 15000.0\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Types Abonnement",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/type-abonnement", "host": ["{{baseUrl}}"], "path": ["api","type-abonnement"] }
+          }
+        },
+        {
+          "name": "Get Type Abonnement by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/type-abonnement/1", "host": ["{{baseUrl}}"], "path": ["api","type-abonnement","1"] }
+          }
+        },
+        {
+          "name": "Update Type Abonnement (ADMIN)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/type-abonnement/1", "host": ["{{baseUrl}}"], "path": ["api","type-abonnement","1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"typeAbonnement\": \"Standard\",\n  \"prix\": 8000.0\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Type Abonnement (ADMIN)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/type-abonnement/1", "host": ["{{baseUrl}}"], "path": ["api","type-abonnement","1"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Mode Paiement",
+      "item": [
+        {
+          "name": "Create Mode Paiement (ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/mode-paiement", "host": ["{{baseUrl}}"], "path": ["api","mode-paiement"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mode\": \"MVola\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Modes Paiement",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/mode-paiement", "host": ["{{baseUrl}}"], "path": ["api","mode-paiement"] }
+          }
+        },
+        {
+          "name": "Get Mode Paiement by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/mode-paiement/1", "host": ["{{baseUrl}}"], "path": ["api","mode-paiement","1"] }
+          }
+        },
+        {
+          "name": "Update Mode Paiement (ADMIN)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/mode-paiement/1", "host": ["{{baseUrl}}"], "path": ["api","mode-paiement","1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mode\": \"Orange Money\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Mode Paiement (ADMIN)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/mode-paiement/1", "host": ["{{baseUrl}}"], "path": ["api","mode-paiement","1"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Historique Abonnement",
+      "item": [
+        {
+          "name": "Create Historique Abonnement (ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/historique-abonnement", "host": ["{{baseUrl}}"], "path": ["api","historique-abonnement"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"utilisateurId\": 1,\n  \"typeAbonnementId\": 1,\n  \"modePaiementId\": 1,\n  \"datePaiement\": \"2026-04-29\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Historiques Abonnement",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/historique-abonnement", "host": ["{{baseUrl}}"], "path": ["api","historique-abonnement"] }
+          }
+        },
+        {
+          "name": "Get Historique Abonnement by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/historique-abonnement/1", "host": ["{{baseUrl}}"], "path": ["api","historique-abonnement","1"] }
+          }
+        },
+        {
+          "name": "Update Historique Abonnement (ADMIN)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/historique-abonnement/1", "host": ["{{baseUrl}}"], "path": ["api","historique-abonnement","1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"utilisateurId\": 1,\n  \"typeAbonnementId\": 1,\n  \"modePaiementId\": 1,\n  \"datePaiement\": \"2026-04-01\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Historique Abonnement (ADMIN)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/historique-abonnement/1", "host": ["{{baseUrl}}"], "path": ["api","historique-abonnement","1"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Historique Lecture",
+      "item": [
+        {
+          "name": "Create Historique Lecture",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/historique-lecture", "host": ["{{baseUrl}}"], "path": ["api","historique-lecture"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"livreId\": 1,\n  \"utilisateurId\": 1,\n  \"dateLecture\": \"2026-03-29\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Historiques Lecture",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/historique-lecture", "host": ["{{baseUrl}}"], "path": ["api","historique-lecture"] }
+          }
+        },
+        {
+          "name": "Get Historique Lecture by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/historique-lecture/1", "host": ["{{baseUrl}}"], "path": ["api","historique-lecture","1"] }
+          }
+        },
+        {
+          "name": "Update Historique Lecture",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/historique-lecture/1", "host": ["{{baseUrl}}"], "path": ["api","historique-lecture","1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"livreId\": 1,\n  \"utilisateurId\": 1,\n  \"dateLecture\": \"2026-03-30\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Historique Lecture (ADMIN)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/historique-lecture/1", "host": ["{{baseUrl}}"], "path": ["api","historique-lecture","1"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Historique Paiement Livre",
+      "item": [
+        {
+          "name": "Create Historique Paiement Livre (ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/historique-paiement-livre", "host": ["{{baseUrl}}"], "path": ["api","historique-paiement-livre"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"livreId\": 1,\n  \"utilisateurId\": 1,\n  \"dateLecture\": \"2026-03-29\",\n  \"prix\": 5000.0\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Historiques Paiement Livre",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/historique-paiement-livre", "host": ["{{baseUrl}}"], "path": ["api","historique-paiement-livre"] }
+          }
+        },
+        {
+          "name": "Get Historique Paiement Livre by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/historique-paiement-livre/1", "host": ["{{baseUrl}}"], "path": ["api","historique-paiement-livre","1"] }
+          }
+        },
+        {
+          "name": "Update Historique Paiement Livre (ADMIN)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/historique-paiement-livre/1", "host": ["{{baseUrl}}"], "path": ["api","historique-paiement-livre","1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"livreId\": 1,\n  \"utilisateurId\": 1,\n  \"dateLecture\": \"2026-03-29\",\n  \"prix\": 6000.0\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Historique Paiement Livre (ADMIN)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/historique-paiement-livre/1", "host": ["{{baseUrl}}"], "path": ["api","historique-paiement-livre","1"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Statistiques (ADMIN)",
+      "item": [
+        {
+          "name": "Livres Populaires",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/stats/livres-populaires/2026/3", "host": ["{{baseUrl}}"], "path": ["api","stats","livres-populaires","2026","3"] }
+          }
+        },
+        {
+          "name": "Types Populaires",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/stats/types-populaires/2026/3", "host": ["{{baseUrl}}"], "path": ["api","stats","types-populaires","2026","3"] }
+          }
+        },
+        {
+          "name": "Revenus Mensuels",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/stats/revenus/2026/3", "host": ["{{baseUrl}}"], "path": ["api","stats","revenus","2026","3"] }
+          }
+        },
+        {
+          "name": "Lectures par Utilisateur",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/stats/lectures-par-utilisateur/2026/3", "host": ["{{baseUrl}}"], "path": ["api","stats","lectures-par-utilisateur","2026","3"] }
+          }
+        },
+        {
+          "name": "Consultations d'un Livre",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/stats/consultations/1", "host": ["{{baseUrl}}"], "path": ["api","stats","consultations","1"] }
+          }
+        },
+        {
+          "name": "Validité Abonnement d'un User",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/stats/validite-abonnement/1", "host": ["{{baseUrl}}"], "path": ["api","stats","validite-abonnement","1"] }
+          }
+        }
+      ]
+    }
+
+  ]
+}
