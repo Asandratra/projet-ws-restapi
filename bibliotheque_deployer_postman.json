@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "Bibliothèque Deployer REST API",
+    "name": "Bibliothèque REST API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -321,13 +321,13 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{baseUrl}}/api/livres?titre=&auteur=&typeLivre=aventure",
+              "raw": "{{baseUrl}}/api/livres?titre=prince&auteur=antoine&typeLivre=roman",
               "host": ["{{baseUrl}}"],
               "path": ["api","livres"],
               "query": [
-                { "key": "titre", "value": "" },
-                { "key": "auteur", "value": "" },
-                { "key": "typeLivre", "value": "aventure" }
+                { "key": "titre", "value": "prince" },
+                { "key": "auteur", "value": "antoine" },
+                { "key": "typeLivre", "value": "roman" }
               ]
             }
           }
